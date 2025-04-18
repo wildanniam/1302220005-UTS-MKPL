@@ -1,5 +1,6 @@
 package lib;
 
+import lib.TaxFunction;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.LinkedList;
@@ -8,8 +9,8 @@ import java.util.List;
 public class Employee {
 
 	private String employeeId;
-	private String firstName;
-	private String lastName;
+	String firstName;
+	String lastName;
 	private String idNumber;
 	private String address;
 
@@ -98,7 +99,21 @@ public class Employee {
 			monthWorkingInYear = 12;
 		}
 
-		return TaxFunction.calculateTax(monthlySalary, otherMonthlyIncome, monthWorkingInYear, annualDeductible,
-				spouseIdNumber.equals(""), childIdNumbers.size());
+		TaxFunction.TaxData taxData = new TaxFunction.TaxData(
+				monthlySalary,
+				otherMonthlyIncome,
+				monthWorkingInYear,
+				annualDeductible,
+				spouseIdNumber.equals(""),
+				childIdNumbers.size());
+		return TaxFunction.calculateTax(taxData);
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
 	}
 }
