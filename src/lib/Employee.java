@@ -1,19 +1,14 @@
 package lib;
 
-import lib.TaxFunction;
-import lib.Gender;
-import lib.Person;
 import java.time.LocalDate;
-import java.time.Month;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
 public class Employee {
 
 	private String employeeId;
-	String firstName;
-	String lastName;
+	private String firstName;
+	private String lastName;
 	private String idNumber;
 	private String address;
 
@@ -120,5 +115,49 @@ public class Employee {
 
 	public String getLastName() {
 		return lastName;
+	}
+
+	public String getEmployeeId() {
+		return employeeId;
+	}
+
+	public String getIdNumber() {
+		return idNumber;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public int getYearJoined() {
+		return yearJoined;
+	}
+
+	public int getMonthJoined() {
+		return monthJoined;
+	}
+
+	public int getDayJoined() {
+		return dayJoined;
+	}
+
+	public boolean isForeigner() {
+		return isForeigner;
+	}
+
+	public Gender getGender() {
+		return gender;
+	}
+
+	public int getMonthlySalary() {
+		return monthlySalary;
+	}
+
+	public int getOtherMonthlyIncome() {
+		return otherMonthlyIncome;
+	}
+
+	public int getAnnualDeductible() {
+		return annualDeductible;
 	}
 }
