@@ -83,25 +83,14 @@ public class Employee {
 	}
 
 	public int getAnnualIncomeTax() {
-
-		// Menghitung berapa lama pegawai bekerja dalam setahun ini, jika pegawai sudah
-		// bekerja dari tahun sebelumnya maka otomatis dianggap 12 bulan.
-		LocalDate date = LocalDate.now();
-
-		if (date.getYear() == joinDate.getYear()) {
-			monthWorkingInYear = date.getMonthValue() - joinDate.getMonthValue();
-		} else {
-			monthWorkingInYear = MAX_MONTH_WORKING;
-		}
-
-		TaxFunction.TaxData taxData = new TaxFunction.TaxData(
+		// Mendelegasikan perhitungan pajak ke TaxFunction
+		return TaxFunction.calculateAnnualTax(
 				monthlySalary,
 				otherMonthlyIncome,
-				monthWorkingInYear,
+				joinDate,
 				annualDeductible,
-				spouse == null,
+				spouse != null, // hasSpouse (true jika memiliki pasangan)
 				children.size());
-		return TaxFunction.calculateTax(taxData);
 	}
 
 	public String getFirstName() {

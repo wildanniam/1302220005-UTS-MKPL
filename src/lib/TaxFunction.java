@@ -1,5 +1,7 @@
 package lib;
 
+import java.time.LocalDate;
+
 public class TaxFunction {
 
 	private static final int NON_TAXABLE_INCOME_SINGLE = 54000000;
@@ -77,4 +79,47 @@ public class TaxFunction {
 
 	}
 
+	/**
+	 * Menghitung jumlah bulan bekerja dalam satu tahun
+	 * 
+	 * @param joinDate tanggal bergabung karyawan
+	 * @return jumlah bulan bekerja dalam tahun ini
+	 */
+	public static int calculateMonthsWorkedInYear(LocalDate joinDate) {
+		LocalDate currentDate = LocalDate.now();
+		
+		if (currentDate.getYear() == joinDate.getYear()) {
+			return currentDate.getMonthValue() - joinDate.getMonthValue();
+		} else {
+			return MAX_MONTH_WORKING;
+		}
+	}
+	
+	/**
+	 * Menghitung pajak tahunan untuk karyawan
+	 * 
+	 * @param monthlySalary     gaji bulanan
+	 * @param otherMonthlyIncome penghasilan lain per bulan
+	 * @param joinDate          tanggal bergabung
+	 * @param deductible        pengurangan pajak tahunan
+	 * @param hasSpouse         true jika karyawan memiliki pasangan
+	 * @param numberOfChildren  jumlah anak
+	 * @return jumlah pajak tahunan
+	 */
+	public static int calculateAnnualTax(int monthlySalary, int otherMonthlyIncome, 
+										LocalDate joinDate, int deductible, 
+										boolean hasSpouse, int numberOfChildren) {
+		
+		int monthWorkingInYear = calculateMonthsWorkedInYear(joinDate);
+		
+		TaxData taxData = new TaxData(
+				monthlySalary,
+				otherMonthlyIncome,
+				monthWorkingInYear,
+				deductible,
+				hasSpouse,
+				numberOfChildren);
+				
+		return calculateTax(taxData);
+	}
 }
