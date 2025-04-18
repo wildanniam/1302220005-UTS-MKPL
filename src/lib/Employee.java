@@ -1,10 +1,13 @@
 package lib;
 
 import lib.TaxFunction;
+import lib.Gender;
+import lib.Person;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ArrayList;
 
 public class Employee {
 
@@ -20,24 +23,21 @@ public class Employee {
 	private int monthWorkingInYear;
 
 	private boolean isForeigner;
-	private boolean gender; // true = Laki-laki, false = Perempuan
+	private Gender gender; // Replacing boolean with Gender enum
 
 	private int monthlySalary;
 	private int otherMonthlyIncome;
 	private int annualDeductible;
 
-	private String spouseName;
-	private String spouseIdNumber;
-
-	private List<String> childNames;
-	private List<String> childIdNumbers;
+	private Person spouse;
+	private List<Person> children;
 
 	private static final double FOREIGNER_SALARY_MULTIPLIER = 1.5;
 	private static final int[] SALARY_GRADE = { 0, 3000000, 5000000, 7000000 }; // Grade 0 is added to avoid confusion
 																				// with array index
 
 	public Employee(String employeeId, String firstName, String lastName, String idNumber, String address,
-			int yearJoined, int monthJoined, int dayJoined, boolean isForeigner, boolean gender) {
+			int yearJoined, int monthJoined, int dayJoined, boolean isForeigner, Gender gender) {
 		this.employeeId = employeeId;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -49,8 +49,7 @@ public class Employee {
 		this.isForeigner = isForeigner;
 		this.gender = gender;
 
-		childNames = new LinkedList<String>();
-		childIdNumbers = new LinkedList<String>();
+		this.children = new ArrayList<>();
 	}
 
 	/**
@@ -77,14 +76,20 @@ public class Employee {
 		this.otherMonthlyIncome = income;
 	}
 
-	public void setSpouse(String spouseName, String spouseIdNumber) {
-		this.spouseName = spouseName;
-		this.spouseIdNumber = idNumber;
+	public void setSpouse(Person spouse) {
+		this.spouse = spouse;
 	}
 
-	public void addChild(String childName, String childIdNumber) {
-		childNames.add(childName);
-		childIdNumbers.add(childIdNumber);
+	public void addChild(Person child) {
+		this.children.add(child);
+	}
+
+	public Person getSpouse() {
+		return spouse;
+	}
+
+	public List<Person> getChildren() {
+		return children;
 	}
 
 	public int getAnnualIncomeTax() {
@@ -104,8 +109,8 @@ public class Employee {
 				otherMonthlyIncome,
 				monthWorkingInYear,
 				annualDeductible,
-				spouseIdNumber.equals(""),
-				childIdNumbers.size());
+				spouse == null,
+				children.size());
 		return TaxFunction.calculateTax(taxData);
 	}
 
