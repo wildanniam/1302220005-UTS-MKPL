@@ -16,7 +16,6 @@ public class Employee {
 	private int monthWorkingInYear;
 
 	private boolean isForeigner;
-	private Gender gender; // Replacing boolean with Gender enum
 
 	private int monthlySalary;
 	private int otherMonthlyIncome;
@@ -25,12 +24,13 @@ public class Employee {
 	private Person spouse;
 	private List<Person> children;
 
+	// Konstanta untuk mengganti magic number
 	private static final double FOREIGNER_SALARY_MULTIPLIER = 1.5;
-	private static final int[] SALARY_GRADE = { 0, 3000000, 5000000, 7000000 }; // Grade 0 is added to avoid confusion
-																				// with array index
+	private static final int[] SALARY_GRADE = { 0, 3000000, 5000000, 7000000 };
+	private static final int MAX_MONTH_WORKING = 12;
 
 	public Employee(String employeeId, String firstName, String lastName, String idNumber, String address,
-			LocalDate joinDate, boolean isForeigner, Gender gender) {
+			LocalDate joinDate, boolean isForeigner) {
 		this.employeeId = employeeId;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -38,7 +38,6 @@ public class Employee {
 		this.address = address;
 		this.joinDate = joinDate;
 		this.isForeigner = isForeigner;
-		this.gender = gender;
 
 		this.children = new ArrayList<>();
 	}
@@ -92,7 +91,7 @@ public class Employee {
 		if (date.getYear() == joinDate.getYear()) {
 			monthWorkingInYear = date.getMonthValue() - joinDate.getMonthValue();
 		} else {
-			monthWorkingInYear = 12;
+			monthWorkingInYear = MAX_MONTH_WORKING;
 		}
 
 		TaxFunction.TaxData taxData = new TaxFunction.TaxData(

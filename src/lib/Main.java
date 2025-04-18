@@ -12,8 +12,8 @@ public class Main {
                 "123456789",
                 "123 Main St",
                 LocalDate.of(2020, 1, 15),
-                false, // isForeigner
-                Gender.MALE // gender
+                false // isForeigner
+        // Gender dihapus karena tidak digunakan
         );
 
         // Mengatur gaji bulanan berdasarkan grade
