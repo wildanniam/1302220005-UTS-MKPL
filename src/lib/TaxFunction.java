@@ -6,6 +6,9 @@ public class TaxFunction {
 	private static final int ADDITIONAL_INCOME_MARRIED = 4500000;
 	private static final int ADDITIONAL_INCOME_PER_CHILD = 1500000;
 	private static final double TAX_RATE = 0.05;
+	private static final int MAX_CHILDREN_FOR_TAX_DEDUCTION = 3;
+	private static final int MAX_MONTH_WORKING = 12;
+	private static final int MINIMUM_TAX = 0;
 
 	public static class TaxData {
 		public int monthlySalary;
@@ -47,12 +50,12 @@ public class TaxFunction {
 
 		int tax = 0;
 
-		if (taxData.numberOfMonthWorking > 12) {
+		if (taxData.numberOfMonthWorking > MAX_MONTH_WORKING) {
 			System.err.println("More than 12 month working per year");
 		}
 
-		if (taxData.numberOfChildren > 3) {
-			taxData.numberOfChildren = 3;
+		if (taxData.numberOfChildren > MAX_CHILDREN_FOR_TAX_DEDUCTION) {
+			taxData.numberOfChildren = MAX_CHILDREN_FOR_TAX_DEDUCTION;
 		}
 
 		if (taxData.isMarried) {
@@ -66,8 +69,8 @@ public class TaxFunction {
 							- taxData.deductible - NON_TAXABLE_INCOME_SINGLE));
 		}
 
-		if (tax < 0) {
-			return 0;
+		if (tax < MINIMUM_TAX) {
+			return MINIMUM_TAX;
 		} else {
 			return tax;
 		}
