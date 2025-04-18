@@ -1,3 +1,3 @@
 module TaxCalculator {
-
+    exports lib;
 }
