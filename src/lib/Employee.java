@@ -2,106 +2,113 @@ package lib;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.ArrayList;
 
+/**
+ * Kelas Employee yang direfaktor dengan menerapkan komposisi
+ * untuk memisahkan tanggung jawab
+ */
 public class Employee {
+	private EmployeeIdentity identity;
+	private SalaryInfo salary;
+	private FamilyInfo family;
 
-	private String employeeId;
-	private String firstName;
-	private String lastName;
-	private String idNumber;
-	private String address;
+	public Employee(String employeeId, String firstName, String lastName,
+			String idNumber, String address, LocalDate joinDate,
+			boolean isForeigner) {
 
-	private LocalDate joinDate;
-	private int monthWorkingInYear;
-
-	private boolean isForeigner;
-
-	private int monthlySalary;
-	private int otherMonthlyIncome;
-	private int annualDeductible;
-
-	private Person spouse;
-	private List<Person> children;
-
-	// Konstanta untuk mengganti magic number
-	private static final double FOREIGNER_SALARY_MULTIPLIER = 1.5;
-	private static final int[] SALARY_GRADE = { 0, 3000000, 5000000, 7000000 };
-	private static final int MAX_MONTH_WORKING = 12;
-
-	public Employee(String employeeId, String firstName, String lastName, String idNumber, String address,
-			LocalDate joinDate, boolean isForeigner) {
-		this.employeeId = employeeId;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.idNumber = idNumber;
-		this.address = address;
-		this.joinDate = joinDate;
-		this.isForeigner = isForeigner;
-
-		this.children = new ArrayList<>();
+		this.identity = new EmployeeIdentity(employeeId, firstName, lastName,
+				idNumber, address, joinDate, isForeigner);
+		this.salary = new SalaryInfo(isForeigner);
+		this.family = new FamilyInfo();
 	}
 
-	/**
-	 * Fungsi untuk menentukan gaji bulanan pegawai berdasarkan grade kepegawaiannya
-	 * (grade 1: 3.000.000 per bulan, grade 2: 5.000.000 per bulan, grade 3:
-	 * 7.000.000 per bulan)
-	 * Jika pegawai adalah warga negara asing gaji bulanan diperbesar sebanyak 50%
-	 */
-
-	public void setMonthlySalary(int grade) {
-		if (grade >= 1 && grade <= 3) {
-			monthlySalary = SALARY_GRADE[grade];
-			if (isForeigner) {
-				monthlySalary = (int) (monthlySalary * FOREIGNER_SALARY_MULTIPLIER);
-			}
-		}
-	}
-
-	public void setAnnualDeductible(int deductible) {
-		this.annualDeductible = deductible;
-	}
-
-	public void setAdditionalIncome(int income) {
-		this.otherMonthlyIncome = income;
-	}
-
-	public void setSpouse(Person spouse) {
-		this.spouse = spouse;
-	}
-
-	public void addChild(Person child) {
-		this.children.add(child);
-	}
-
-	public Person getSpouse() {
-		return spouse;
-	}
-
-	public List<Person> getChildren() {
-		return children;
-	}
-
-	public int getAnnualIncomeTax() {
-		// Mendelegasikan perhitungan pajak ke TaxFunction
-		return TaxFunction.calculateAnnualTax(
-				monthlySalary,
-				otherMonthlyIncome,
-				joinDate,
-				annualDeductible,
-				spouse != null, // hasSpouse (true jika memiliki pasangan)
-				children.size());
+	// Metode delegasi untuk identitas
+	public String getEmployeeId() {
+		return identity.getEmployeeId();
 	}
 
 	public String getFirstName() {
-		return firstName;
+		return identity.getFirstName();
 	}
 
 	public String getLastName() {
-		return lastName;
+		return identity.getLastName();
+	}
+
+	public String getFullName() {
+		return identity.getFullName();
+	}
+
+	public String getIdNumber() {
+		return identity.getIdNumber();
+	}
+
+	public String getAddress() {
+		return identity.getAddress();
 	}
 
 	public LocalDate getJoinDate() {
-		return joinDate;
+		return identity.getJoinDate();
+	}
+
+	public boolean isForeigner() {
+		return identity.isForeigner();
+	}
+
+	// Metode delegasi untuk gaji
+	public void setMonthlySalary(int grade) {
+		salary.setMonthlySalary(grade);
+	}
+
+	public void setAdditionalIncome(int income) {
+		salary.setAdditionalIncome(income);
+	}
+
+	public void setAnnualDeductible(int deductible) {
+		salary.setAnnualDeductible(deductible);
+	}
+
+	public int getMonthlySalary() {
+		return salary.getMonthlySalary();
+	}
+
+	public int getOtherMonthlyIncome() {
+		return salary.getOtherMonthlyIncome();
+	}
+
+	public int getAnnualDeductible() {
+		return salary.getAnnualDeductible();
+	}
+
+	// Metode delegasi untuk keluarga
+	public void setSpouse(Person spouse) {
+		family.setSpouse(spouse);
+	}
+
+	public Person getSpouse() {
+		return family.getSpouse();
+	}
+
+	public boolean hasSpouse() {
+		return family.hasSpouse();
+	}
+
+	public void addChild(Person child) {
+		family.addChild(child);
+	}
+
+	public List<Person> getChildren() {
+		return family.getChildren();
+	}
+
+	// Metode untuk perhitungan pajak
+	public int getAnnualIncomeTax() {
+		return TaxFunction.calculateAnnualTax(
+				salary.getMonthlySalary(),
+				salary.getOtherMonthlyIncome(),
+				identity.getJoinDate(),
+				salary.getAnnualDeductible(),
+				family.hasSpouse(),
+				family.getNumberOfChildren());
 	}
 }
